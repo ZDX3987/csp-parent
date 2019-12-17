@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdx.csp.article.mapper.CategoryMapper">
+
+    <select id="showList" resultType="category">
+      select id, alias, p_id from category
+    </select>
+
+    <select id="getById" parameterType="integer" resultType="category">
+      select id, alias, p_id from category where id = #{id}
+    </select>
+</mapper>

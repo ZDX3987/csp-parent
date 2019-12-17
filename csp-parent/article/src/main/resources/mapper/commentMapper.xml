@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdx.csp.article.mapper.CommentMapper">
+
+    <select id="getByArticle" parameterType="int" resultType="Comment">
+      select id, text, article, user, createTime, parise from comments
+      where article = #{article} order by createTime desc
+    </select>
+
+    <update id="parise" parameterType="int">
+        update comments set parise =
+        <if test="isParised">
+            parise + 1
+        </if>
+        <if test="!isParised">
+            parise - 1
+        </if>
+        where id = #{id}
+    </update>
+
+    <insert id="insert" parameterType="comment">
+        <selectKey resultType="int" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into comments(text,article,user,createTime)
+        values(#{text}, #{article}, #{user}, #{createTime})
+    </insert>
+</mapper>

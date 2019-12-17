@@ -1,0 +1,32 @@
+server:
+  port: 8082
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka
+spring:
+  application:
+    name: message
+
+  activemq:
+    broker-url: tcp://127.0.0.1:61616
+    in-memory: true
+    pool:
+      enabled: false
+  mail:
+    host: smtp.163.com
+    username: zdx3987@163.com   #邮箱地址
+    password: zdx3987   #邮箱授权码
+    protocol:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+
+msg:
+  subject: 您好，会员注册成功邮件。
+  text:  恭喜您的账户{}注册成功，验证码为code，一分钟内有效！

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdx.csp.article.mapper.ArticleMapper">
+
+    <delete id="delete" parameterType="integer">
+        delete from csp_article where id = #{id}
+    </delete>
+
+    <select id="collected" parameterType="integer" resultType="int">
+        select count(*) from collect_article where article_id = #{articleId} and user_id = #{userId}
+    </select>
+
+    <select id="getByCate" parameterType="integer" resultType="article">
+       select id, title, content, digest, createTime, author, parise, imgUrl, category, status
+        from csp_article where category in(select id from category where id = #{cateId} or p_id = #{cateId})
+        order by createTime desc limit #{currentIndex}, #{pageCount}
+    </select>
+
+    <select id="getByUserId" parameterType="integer" resultType="article">
+        select id, title, content, digest, createTime, author, parise, imgUrl, category, status
+        from csp_article where author = #{userId} order by createTime desc
+    </select>
+
+    <select id="getByUser" parameterType="integer" resultType="article">
+        SELECT
+            id, title, digest, createTime, author, parise, imgUrl, category, status
+        FROM
+            csp_article
+        WHERE
+            id IN ( SELECT article_id FROM collect_article WHERE user_id = #{uId} )
+    </select>
+
+    <delete id="unCollect" parameterType="integer">
+        delete from collect_article where article_id = #{aId} and user_id = #{uId}
+    </delete>
+
+    <insert id="collectArticle" parameterType="integer">
+      insert into collect_article (article_id, user_id) values (#{aId}, #{uId})
+    </insert>
+
+    <select id="getById" parameterType="integer" resultType="article">
+      select id, title, content, digest, createTime, author, parise, imgUrl, category, status
+      from csp_article where id = #{id}
+    </select>
+
+    <select id="showList" resultType="Article">
+      select id, title, content, digest, createTime, author, parise, imgUrl, category, status
+      from csp_article order by ${order} desc limit #{currentIndex}, #{pageCount}
+    </select>
+
+    <update id="parise" parameterType="int">
+      update csp_article set parise =
+      <if test="!isParised">
+          parise + 1
+      </if>
+      <if test="isParised">
+          parise - 1
+      </if>
+      where id = #{id}
+    </update>
+
+    <insert id="create" parameterType="article">
+        <selectKey resultType="int" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into csp_article
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="title!=null">
+              title,
+          </if>
+          <if test="content!=null">
+              content,
+          </if>
+          <if test="digest!=null">
+              digest,
+          </if>
+          <if test="createTime!=null">
+              createTime,
+          </if>
+          <if test="author!=null">
+              author,
+          </if>
+          <if test="parise!=null">
+              parise,
+          </if>
+          <if test="imgUrl!=null">
+              imgUrl,
+          </if>
+          <if test="category!=null">
+              category,
+          </if>
+          <if test="status!=null">
+              status,
+          </if>
+      </trim>
+      values
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="title!=null">
+              #{title},
+          </if>
+          <if test="content!=null">
+              #{content},
+          </if>
+          <if test="digest!=null">
+              #{digest},
+          </if>
+          <if test="createTime!=null">
+              #{createTime},
+          </if>
+          <if test="author!=null">
+              #{author},
+          </if>
+          <if test="parise!=null">
+              #{parise},
+          </if>
+          <if test="imgUrl!=null">
+              #{imgUrl},
+          </if>
+          <if test="category!=null">
+              #{category},
+          </if>
+          <if test="status!=null">
+              #{status.id},
+          </if>
+      </trim>
+    </insert>
+
+
+
+    <select id="getCountByCate" resultType="map">
+        select category, count(*) count from csp_article group by category
+    </select>
+</mapper>

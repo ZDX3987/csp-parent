@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdx.csp.user.mapper.UserMapper">
+
+    <select id="getFriends" parameterType="integer" resultType="integer">
+        select
+        <if test="flag==0">
+            to_id
+        </if>
+        <if test="flag==1">
+            from_id
+        </if>
+        from attention where
+        <if test="flag==0">
+            from_id =
+        </if>
+        <if test="flag==1">
+            to_id =
+        </if>
+        #{userId}
+    </select>
+
+    <select id="attentioned" parameterType="integer" resultType="int">
+        select count(*) from attention where from_id = #{from} and to_id = #{to}
+    </select>
+
+    <insert id="attention" parameterType="integer">
+        <selectKey resultType="int" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into attention(from_id, to_id) values(#{from}, #{to})
+    </insert>
+
+    <delete id="unAttention" parameterType="integer">
+        delete from attention where from_id = #{from} and to_id = #{to}
+    </delete>
+
+    <select id="findById" parameterType="integer" resultType="user">
+        select id, username, sid, email, status, introduce, createTime,imgUrl
+        from csp_user
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="user">
+        insert into csp_user (
+          username,password,
+          <if test="sid!=null and sid!=''">
+          sid,
+          </if>
+          <if test="status!=null and status!=''">
+            status,
+          </if>
+          email
+        ) values (
+          #{username},#{password},
+          <if test="sid!=null and sid!=''">
+            #{sid},
+          </if>
+          <if test="status!=null and status!=''">
+            #{status},
+          </if>
+          #{email}
+        )
+    </insert>
+
+    <select id="login" parameterType="user" resultType="user">
+        select id, username, password
+        from csp_user where
+        <if test="username != null">
+        username = #{username} and
+        </if>
+        <if test="email != null">
+        email = #{email} and
+        </if>
+        password = #{password}
+    </select>
+
+    <update id="update" parameterType="user">
+        update csp_user set
+        username = #{username},
+        email = #{email},
+        introduce = #{introduce}
+        where id = #{id}
+    </update>
+
+    <update id="updateUrl">
+        update csp_user set imgUrl = #{url} where id = #{id}
+    </update>
+
+    <select id="findByEmail" parameterType="string" resultType="user">
+       select id, username, sid, email, status, introduce, createTime,imgUrl
+        from csp_user
+        where email = #{email}
+    </select>
+
+    <update id="changePassword">
+        update csp_user set password = #{password} where email = #{email}
+    </update>
+</mapper>

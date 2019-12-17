@@ -1,0 +1,56 @@
+server:
+  port: 8081
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka
+
+spring:
+  #数据源配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/csp?serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 7102
+  #应用配置
+  application:
+    name: user
+  #activemq连接信息
+  activemq:
+    broker-url: tcp://127.0.0.1:61616
+    in-memory: true
+    pool:
+      enabled: false
+
+  #Redis连接信息
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    jedis:
+      pool:
+        max-active: 1000
+        max-idle: 100
+        min-idle: 1
+        max-wait: -1
+
+mybatis:
+  mapper-locations: mapper/*.xml
+  type-aliases-package: com.zdx.csp.entity
+
+
+#自定义配置
+message:
+  queue: mq-csp
+
+fastdfs:
+  host: 192.168.160.131
+
+#文件服务器配置
+fdfs:
+  connect-timeout: 600
+  so-timeout: 1500
+  tracker-list: 192.168.160.131:22122
+  pool:
+    jmx-enabled: false

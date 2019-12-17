@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="csp-user:war">
+    <output-path>$PROJECT_DIR$/csp-user/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>csp-user</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="csp-user-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="csp-user:war exploded" />
+    </root>
+  </artifact>
+</component>
